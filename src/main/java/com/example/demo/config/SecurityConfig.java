@@ -29,10 +29,11 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF (necesario para H2 Console)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Habilitar CORS
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/h2-console/**").permitAll() // Permitir acceso a H2 Console
-                        .requestMatchers("/api/**").authenticated() // Proteger endpoints de la API
-                        .anyRequest().permitAll() // Permitir acceso público a otros endpoints
-                )
+    .requestMatchers("/h2-console/**").permitAll() // Permitir acceso a H2 Console
+    .requestMatchers("/api/auth/login").permitAll() // Permitir acceso público al login
+    .requestMatchers("/api/**").authenticated() // Proteger endpoints de la API
+    .anyRequest().permitAll() // Permitir acceso público a otros endpoints
+)
                 .headers(headers -> headers
                         .xssProtection(xss -> xss.headerValue(XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK)) // Habilitar protección XSS
                         .contentSecurityPolicy(csp -> csp.policyDirectives("frame-ancestors 'self' http://localhost:8080/h2-console")) // Permitir frames desde H2 Console
