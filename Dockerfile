@@ -1,5 +1,5 @@
-# Usar una imagen base con Maven y Java 17
-FROM maven:3.8.6-openjdk-17 AS build
+# Usar una imagen base con Maven y Java
+FROM maven:3.8.6-jdk-17-slim AS build
 WORKDIR /app
 
 # Copiar el código fuente
