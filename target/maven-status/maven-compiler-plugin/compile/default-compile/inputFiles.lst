@@ -1,0 +1,9 @@
+/Users/macbookair/Desktop/demo/src/main/java/com/example/demo/CreditosApplication.java
+/Users/macbookair/Desktop/demo/src/main/java/com/example/demo/config/SecurityConfig.java
+/Users/macbookair/Desktop/demo/src/main/java/com/example/demo/controller/DeudorController.java
+/Users/macbookair/Desktop/demo/src/main/java/com/example/demo/controller/TestController.java
+/Users/macbookair/Desktop/demo/src/main/java/com/example/demo/model/Deudor.java
+/Users/macbookair/Desktop/demo/src/main/java/com/example/demo/repository/DeudorRepository.java
+/Users/macbookair/Desktop/demo/src/main/java/com/example/demo/service/DeudorService.java
+/Users/macbookair/Desktop/demo/src/main/java/com/example/demo/service/EmailService.java
+/Users/macbookair/Desktop/demo/src/main/java/com/example/demo/task/ScheduledTasks.java
