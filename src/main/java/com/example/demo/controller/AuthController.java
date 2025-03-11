@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.util.JwtUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,8 +17,11 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
 
-    public AuthController(AuthenticationManager authenticationManager) {
+    private final JwtUtil jwtUtil;
+
+    public AuthController(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
         this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/login")
@@ -33,7 +37,11 @@ public class AuthController {
         // Establecer la autenticación en el contexto de seguridad
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return ResponseEntity.ok("Login exitoso");
+        // Generar el token JWT
+        String token = jwtUtil.generateToken(loginRequest.getUsername());
+
+        // Devolver el token en la respuesta
+        return ResponseEntity.ok(token);
     }
 
     public static class LoginRequest {
