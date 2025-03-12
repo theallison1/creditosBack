@@ -30,14 +30,24 @@ public class DeudorController {
         return deudorService.getAllDeudores();
     }
 
-    // Pagar la cuota semanal de un deudor
     @PutMapping("/{id}/pagar-cuota")
     public ResponseEntity<Deudor> pagarCuota(@PathVariable Long id) {
         Deudor deudor = deudorService.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Deudor no encontrado"));
 
+        // Validar que el monto pendiente no sea cero o negativo
+        if (deudor.getMontoPendiente() <= 0) {
+            throw new IllegalStateException("El deudor ya no tiene deuda pendiente.");
+        }
+
         // Actualizar el monto pendiente
         deudor.setMontoPendiente(deudor.getMontoPendiente() - deudor.getMontoCuotaSemanal());
+
+        // Si el monto pendiente es cero o menor, marcarlo como cobrado
+        if (deudor.getMontoPendiente() <= 0) {
+            deudor.setMontoPendiente(0); // Asegurarse de que no sea negativo
+            deudor.setCobrado(true); // Marcar como cobrado
+        }
 
         // Actualizar la fecha del último pago
         deudor.setFechaUltimoPago(LocalDate.now());
