@@ -1,6 +1,8 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -26,11 +28,11 @@ public class Deudor {
 
     @Temporal(TemporalType.DATE)
     @Column(name = "fecha_ultimo_pago")
-    private Date fechaUltimoPago;
+    private LocalDate fechaUltimoPago;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "fecha_proximo_pago")
-    private Date fechaProximoPago;
+    private LocalDate fechaProximoPago;
 
     @Column(name = "monto_pendiente", nullable = false)
     private double montoPendiente;
@@ -93,19 +95,19 @@ public class Deudor {
         this.fechaInicio = fechaInicio;
     }
 
-    public Date getFechaUltimoPago() {
+    public LocalDate getFechaUltimoPago() {
         return fechaUltimoPago;
     }
 
-    public void setFechaUltimoPago(Date fechaUltimoPago) {
+    public void setFechaUltimoPago(LocalDate fechaUltimoPago) {
         this.fechaUltimoPago = fechaUltimoPago;
     }
 
-    public Date getFechaProximoPago() {
+    public LocalDate getFechaProximoPago() {
         return fechaProximoPago;
     }
 
-    public void setFechaProximoPago(Date fechaProximoPago) {
+    public void setFechaProximoPago(LocalDate fechaProximoPago) {
         this.fechaProximoPago = fechaProximoPago;
     }
 

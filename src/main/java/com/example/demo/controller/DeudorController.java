@@ -1,11 +1,15 @@
 package com.example.demo.controller;
 
+import com.example.demo.exception.ResourceNotFoundException; // Importar la excepción
 import com.example.demo.model.Deudor;
 import com.example.demo.service.DeudorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.time.LocalDate;
+
 
 @RestController
 @RequestMapping("/api/deudores")
@@ -14,13 +18,36 @@ public class DeudorController {
     @Autowired
     private DeudorService deudorService;
 
+    // Crear un nuevo deudor
     @PostMapping
     public Deudor createDeudor(@RequestBody Deudor deudor) {
         return deudorService.saveDeudor(deudor);
     }
 
+    // Obtener todos los deudores
     @GetMapping
     public List<Deudor> getAllDeudores() {
         return deudorService.getAllDeudores();
+    }
+
+    // Pagar la cuota semanal de un deudor
+    @PutMapping("/{id}/pagar-cuota")
+    public ResponseEntity<Deudor> pagarCuota(@PathVariable Long id) {
+        Deudor deudor = deudorService.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Deudor no encontrado"));
+
+        // Actualizar el monto pendiente
+        deudor.setMontoPendiente(deudor.getMontoPendiente() - deudor.getMontoCuotaSemanal());
+
+        // Actualizar la fecha del último pago
+        deudor.setFechaUltimoPago(LocalDate.now());
+
+        // Calcular la fecha del próximo pago (7 días después)
+        deudor.setFechaProximoPago(LocalDate.now().plusDays(7));
+
+        // Guardar los cambios
+        Deudor updatedDeudor = deudorService.saveDeudor(deudor);
+
+        return ResponseEntity.ok(updatedDeudor);
     }
 }

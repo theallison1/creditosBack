@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DeudorService {
@@ -19,5 +20,10 @@ public class DeudorService {
 
     public List<Deudor> getAllDeudores() {
         return deudorRepository.findAll();
+    }
+
+
+    public Optional<Deudor> findById(Long id) {
+        return deudorRepository.findById(id);
     }
 }
