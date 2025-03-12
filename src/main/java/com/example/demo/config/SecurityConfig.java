@@ -61,16 +61,7 @@ public class SecurityConfig {
         return source;
     }
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        // Crear un usuario en memoria (puedes cambiarlo por una base de datos)
-        UserDetails user = User.withDefaultPasswordEncoder()
-                .username("user")
-                .password("password")
-                .roles("USER")
-                .build();
-        return new InMemoryUserDetailsManager(user);
-    }
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
