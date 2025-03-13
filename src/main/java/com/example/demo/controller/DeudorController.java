@@ -30,7 +30,6 @@ public class DeudorController {
     public List<Deudor> getAllDeudores() {
         return deudorService.getAllDeudores();
     }
-
     @PutMapping("/{id}/pagar-cuota")
     public ResponseEntity<Deudor> pagarCuota(
             @PathVariable Long id,
@@ -45,7 +44,13 @@ public class DeudorController {
             throw new IllegalStateException("El deudor ya no tiene deuda pendiente.");
         }
 
-        // Actualizar el monto pendiente
+        // Actualizar el monto de la cuota semanal si se proporciona en el cuerpo de la solicitud
+        if (updates != null && updates.containsKey("montoCuotaSemanal")) {
+            double nuevoMontoCuotaSemanal = (double) updates.get("montoCuotaSemanal");
+            deudor.setMontoCuotaSemanal(nuevoMontoCuotaSemanal);
+        }
+
+        // Actualizar el monto pendiente usando el monto de la cuota semanal (original o modificado)
         deudor.setMontoPendiente(deudor.getMontoPendiente() - deudor.getMontoCuotaSemanal());
 
         // Si el monto pendiente es cero o menor, marcarlo como cobrado
@@ -65,12 +70,6 @@ public class DeudorController {
         } else {
             // Calcular la fecha del próximo pago (7 días después) si no se proporciona
             deudor.setFechaProximoPago(LocalDate.now().plusDays(7));
-        }
-
-        // Actualizar el monto de la cuota semanal si se proporciona en el cuerpo de la solicitud
-        if (updates != null && updates.containsKey("montoCuotaSemanal")) {
-            double nuevoMontoCuotaSemanal = (double) updates.get("montoCuotaSemanal");
-            deudor.setMontoCuotaSemanal(nuevoMontoCuotaSemanal);
         }
 
         // Guardar los cambios
