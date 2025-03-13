@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.time.LocalDate;
+import java.util.Map;
 
 
 @RestController
@@ -31,7 +32,11 @@ public class DeudorController {
     }
 
     @PutMapping("/{id}/pagar-cuota")
-    public ResponseEntity<Deudor> pagarCuota(@PathVariable Long id) {
+    public ResponseEntity<Deudor> pagarCuota(
+            @PathVariable Long id,
+            @RequestBody(required = false) Map<String, Object> updates // Parámetros opcionales
+    ) {
+        // Buscar el deudor por ID
         Deudor deudor = deudorService.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Deudor no encontrado"));
 
@@ -52,8 +57,21 @@ public class DeudorController {
         // Actualizar la fecha del último pago
         deudor.setFechaUltimoPago(LocalDate.now());
 
-        // Calcular la fecha del próximo pago (7 días después)
-        deudor.setFechaProximoPago(LocalDate.now().plusDays(7));
+        // Actualizar la fecha de próximo pago si se proporciona en el cuerpo de la solicitud
+        if (updates != null && updates.containsKey("fechaProximoPago")) {
+            String fechaProximoPagoStr = (String) updates.get("fechaProximoPago");
+            LocalDate fechaProximoPago = LocalDate.parse(fechaProximoPagoStr);
+            deudor.setFechaProximoPago(fechaProximoPago);
+        } else {
+            // Calcular la fecha del próximo pago (7 días después) si no se proporciona
+            deudor.setFechaProximoPago(LocalDate.now().plusDays(7));
+        }
+
+        // Actualizar el monto de la cuota semanal si se proporciona en el cuerpo de la solicitud
+        if (updates != null && updates.containsKey("montoCuotaSemanal")) {
+            double nuevoMontoCuotaSemanal = (double) updates.get("montoCuotaSemanal");
+            deudor.setMontoCuotaSemanal(nuevoMontoCuotaSemanal);
+        }
 
         // Guardar los cambios
         Deudor updatedDeudor = deudorService.saveDeudor(deudor);
