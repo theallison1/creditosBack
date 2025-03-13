@@ -15,13 +15,14 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 @RestController
 @RequestMapping("/api/deudores")
 public class DeudorController {
 
     @Autowired
     private DeudorService deudorService;
+
+    private static final Logger logger = LoggerFactory.getLogger(DeudorController.class);
 
     // Crear un nuevo deudor
     @PostMapping
@@ -34,20 +35,36 @@ public class DeudorController {
     public List<Deudor> getAllDeudores() {
         return deudorService.getAllDeudores();
     }
+
+    // Obtener deudores activos
     @GetMapping("/activos")
     public ResponseEntity<List<Deudor>> obtenerDeudoresActivos() {
         List<Deudor> deudoresActivos = deudorService.obtenerDeudoresActivos();
         return ResponseEntity.ok(deudoresActivos);
     }
 
+    // Obtener el historial de deudores
+    @GetMapping("/historial")
+    public ResponseEntity<?> obtenerHistorialDeudores() {
+        try {
+            logger.info("Obteniendo el historial de deudores");
+
+            // Obtener todos los deudores con su historial de pagos
+            List<Deudor> deudores = deudorService.getAllDeudores();
+
+            // Formatear la respuesta
+            return ResponseEntity.ok(deudores);
+        } catch (Exception e) {
+            logger.error("Error al obtener el historial de deudores", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
+        }
+    }
 
     @PutMapping("/{id}/pagar-cuota")
     public ResponseEntity<?> pagarCuota(
             @PathVariable Long id,
             @RequestBody(required = false) Map<String, Object> updates
     ) {
-        Logger logger = LoggerFactory.getLogger(DeudorController.class);
-
         try {
             logger.info("Iniciando pago de cuota para el deudor con ID: {}", id);
             if (updates != null) {
