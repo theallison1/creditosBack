@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.exception.ResourceNotFoundException; // Importar la excepción
+import com.example.demo.model.ApiResponse;
 import com.example.demo.model.Deudor;
 import com.example.demo.service.DeudorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,9 +44,8 @@ public class DeudorController {
         return ResponseEntity.ok(deudoresActivos);
     }
 
-    // Obtener el historial de deudores
     @GetMapping("/historial")
-    public ResponseEntity<?> obtenerHistorialDeudores() {
+    public ResponseEntity<ApiResponse<List<Deudor>>> obtenerHistorialDeudores() {
         try {
             logger.info("Obteniendo el historial de deudores");
 
@@ -53,10 +53,12 @@ public class DeudorController {
             List<Deudor> deudores = deudorService.getAllDeudores();
 
             // Formatear la respuesta
-            return ResponseEntity.ok(deudores);
+            ApiResponse<List<Deudor>> response = new ApiResponse<>(true, "Datos obtenidos correctamente", deudores);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             logger.error("Error al obtener el historial de deudores", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
+            ApiResponse<List<Deudor>> response = new ApiResponse<>(false, "Error interno del servidor", null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
