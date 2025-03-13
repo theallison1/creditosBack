@@ -34,6 +34,11 @@ public class DeudorController {
     public List<Deudor> getAllDeudores() {
         return deudorService.getAllDeudores();
     }
+    @GetMapping("/activos")
+    public ResponseEntity<List<Deudor>> obtenerDeudoresActivos() {
+        List<Deudor> deudoresActivos = deudorService.obtenerDeudoresActivos();
+        return ResponseEntity.ok(deudoresActivos);
+    }
 
 
     @PutMapping("/{id}/pagar-cuota")

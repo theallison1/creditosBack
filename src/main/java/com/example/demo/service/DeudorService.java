@@ -26,4 +26,7 @@ public class DeudorService {
     public Optional<Deudor> findById(Long id) {
         return deudorRepository.findById(id);
     }
+    public List<Deudor> obtenerDeudoresActivos() {
+        return deudorRepository.findByMontoPendienteGreaterThan(0);
+    }
 }
