@@ -39,19 +39,32 @@ public class Deudor {
 
     @Column(name = "cobrado", nullable = false)
     private boolean cobrado;
+    private String direccion; // Nuevo campo
+
 
     // Constructor vacío (requerido por JPA)
     public Deudor() {
     }
 
-    // Constructor con parámetros (opcional, pero útil)
-    public Deudor(String nombreDeudor, double montoInicial, double montoCuotaSemanal, Date fechaInicio, double montoPendiente, boolean cobrado) {
+    public Deudor(Long id, String nombreDeudor, double montoInicial, double montoCuotaSemanal, Date fechaInicio, LocalDate fechaUltimoPago, LocalDate fechaProximoPago, double montoPendiente, boolean cobrado, String direccion) {
+        this.id = id;
         this.nombreDeudor = nombreDeudor;
         this.montoInicial = montoInicial;
         this.montoCuotaSemanal = montoCuotaSemanal;
         this.fechaInicio = fechaInicio;
+        this.fechaUltimoPago = fechaUltimoPago;
+        this.fechaProximoPago = fechaProximoPago;
         this.montoPendiente = montoPendiente;
         this.cobrado = cobrado;
+        this.direccion = direccion;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 
     // Getters y Setters
